@@ -9,7 +9,7 @@ const callApi = () => {
 
     axiosInstance.interceptors.request.use(
         (config) => {
-            config.withCredentials = true
+            // config.withCredentials = true
             return config;
         },
         err => {throw err}
@@ -27,9 +27,9 @@ const callApi = () => {
                 if(res.status === 422){
                     throw new ValidationError(res.data.errors)
                 }else if(res.status === 401){
-                    throw new ValidationError(res.data.message)
+                    throw new Error(res.data.message)
                 }else if(res.status === 500){
-                    throw new ValidationError(res.data.message)
+                    throw new Error(res.data.message)
                 }
             }
             throw err

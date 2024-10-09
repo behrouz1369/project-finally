@@ -22,6 +22,10 @@ const LoginPage = () => {
         if(token === undefined){
             router.push('/auth/login')
         }
+
+        return () => {
+            clearTokenVerify()
+        }
     },[token])
 
   return (

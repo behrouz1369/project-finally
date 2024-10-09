@@ -3,11 +3,13 @@ import { RootState } from "@/store"
 
 
 interface AuthState {
-    tokenVerify?: string
+    tokenVerify?: string,
+    messageError?:string
 }
 
 const initialState : AuthState = {
-    tokenVerify : undefined
+    tokenVerify : undefined,
+    messageError:undefined
 }
 
 const authSlice = createSlice({
@@ -16,12 +18,16 @@ const authSlice = createSlice({
     reducers:{
         updateTokenVerify : (state , action:PayloadAction<string | undefined>) => {
             state.tokenVerify = action?.payload
+        },
+        updateMessageError : (state , action:PayloadAction<string | undefined>) => {
+            state.messageError = action?.payload
         }
     }
 })
 
-export const {updateTokenVerify} = authSlice.actions;
+export const {updateTokenVerify , updateMessageError} = authSlice.actions;
 
 export const selectTokenVerify = (state : RootState) => state.auth.tokenVerify
+export const selectMessageError = (state : RootState) => state.auth.messageError
 
 export default authSlice.reducer

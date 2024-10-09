@@ -1,18 +1,18 @@
 
 
-const StoreLoginToken = async (token : string) => {
+const StoreLoginToken = async (options:{}) => {
     await fetch('/api/login' , {
-        method:'post',
+        method:'POST',
         headers:{
             "Content-Type" : "application/json"
         },
-        body:JSON.stringify(token)
+        ...options
     })
 }
 
 const RemoveLoginToken = async () => {
     await fetch('/api/logout' , {
-        method:'post',
+        method:'POST',
         headers:{
             "Content-Type" : "application/json"
         }

@@ -24,18 +24,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const router = useRouter()
-    const {user , error ,loading}=useAuth()
+    // const router = useRouter()
+    // const {user , error ,loading}=useAuth()
 
-    if(loading){
-        return <h2>Loading</h2>
-    }
+    // if(loading){
+    //     return <h2>Loading</h2>
+    // }
 
-    if(error){
-        router.push('/auth/login')
-    }
+    // if(error){
+    //     router.push('/auth/login')
+    // }
 
-    console.log(user)
+    // console.log(user)
   return (
     <html lang="en">
       <Provider store={store} >
