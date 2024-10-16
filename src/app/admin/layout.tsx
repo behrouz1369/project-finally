@@ -1,29 +1,61 @@
 'use client'
 
+import { RemoveLoginToken } from "@/helpers/auth";
+import useAuth from "@/hooks/useAuth";
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Bars3BottomLeftIcon, BellIcon, HomeIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import { Bars3BottomLeftIcon, BellIcon, HomeIcon, MagnifyingGlassIcon, XMarkIcon, EnvelopeIcon } from "@heroicons/react/16/solid";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 
-const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-//   { name: "Team", href: "#", icon: UsersIcon, current: false },
-//   { name: "Projects", href: "#", icon: FolderIcon, current: false },
-//   { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-//   { name: "Documents", href: "#", icon: InboxIcon, current: false },
-//   { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+
+
 
 interface Props {
   children: React.ReactNode;
 }
 
 const AdminPanelLayout = ({ children }: Props) => {
+    const {user:userData , error , loading} = useAuth()
+
+    const router = useRouter()
+    const pathUrl = usePathname()
+
     const [sidebarOpen , setSidebarOpen] = useState(false)
+
+    const navigation = [
+        { name: "داشبورد", href: "/admin", icon: HomeIcon, current: (pathUrl === '/admin') ? true : false },
+        { name: "مدیریت دسته بندی مقالات", href: "/admin/article-category", icon: EnvelopeIcon, current: (pathUrl === '/admin/article-category') ? true : false },
+      //   { name: "Projects", href: "#", icon: FolderIcon, current: false },
+      //   { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
+      //   { name: "Documents", href: "#", icon: InboxIcon, current: false },
+      //   { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
+      ];
+
+    const userNavigation = [
+        { name: `${userData}`, href: "/admin" },
+        // { name: "Settings", href: "#" },
+        // { name: "Sign out", href: "/" },
+      ];
+
+    if(loading){
+        return <div>Loading ...</div>
+    }
+
+    if(error){
+        router.push('/auth/login')
+        return <></>
+    }
+
+    // useEffect(() => {
+    //     dispatch(updateUser(user))
+    // },[userData])
+
+    const logoutHandler = () => {
+        RemoveLoginToken()
+        router.push('/auth/login')
+    }
+
   return (
     <>
       <div>
@@ -80,11 +112,12 @@ const AdminPanelLayout = ({ children }: Props) => {
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <img
+                    {/* <img
                       className="h-8 w-auto"
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                       alt="Your Company"
-                    />
+                    /> */}
+                    <span className="text-sm font-semibold text-white">{userData}</span>
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
@@ -98,6 +131,7 @@ const AdminPanelLayout = ({ children }: Props) => {
                             className={`${item.current ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-300'} mr-4 flex-shrink-0 h-6 w-6`}
                             aria-hidden="true"
                           />
+
                           {item.name}
                         </a>
                       ))}
@@ -117,16 +151,17 @@ const AdminPanelLayout = ({ children }: Props) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex h-16 flex-shrink-0 items-center bg-gray-900 px-4">
-              <img
+              {/* <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                 alt="Your Company"
-              />
+              /> */}
+              <span className="text-sm font-semibold text-white">{userData}</span>
             </div>
             <div className="flex flex-1 flex-col overflow-y-auto">
               <nav className="flex-1 space-y-1 px-2 py-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className={`${item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
@@ -136,7 +171,7 @@ const AdminPanelLayout = ({ children }: Props) => {
                       aria-hidden="true"
                     />
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>
@@ -205,19 +240,23 @@ const AdminPanelLayout = ({ children }: Props) => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute left-0 z-10 mt-2 w-64 origin-top-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
+                            <Link
                               href={item.href}
-                              className={`${active ? '' : 'bg-gray-100'} block px-4 py-2 text-sm text-gray-700`}
+                              className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700`}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}
+
+                        <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-all">
+                            Logout
+                        </button>
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -227,17 +266,15 @@ const AdminPanelLayout = ({ children }: Props) => {
 
           <main className="flex-1">
             <div className="py-6">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+              {/* <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 <h1 className="text-2xl font-semibold text-gray-900">
                   Dashboard
                 </h1>
-              </div>
+              </div> */}
               <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
                 {/* Replace with your content */}
                 <div className="py-4">
                     {children}
-                  <div className="h-96 rounded-lg border-4 border-dashed border-gray-200" />
-
                 </div>
                 {/* /End replace */}
               </div>

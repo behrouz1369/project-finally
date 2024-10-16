@@ -5,6 +5,7 @@ import { StoreLoginToken } from '@/helpers/auth';
 import callApi from '@/helpers/callApi';
 import { withFormik } from 'formik';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { toast } from 'react-toastify';
 import * as yup from 'yup'
 
 
@@ -35,36 +36,29 @@ const LoginForm = withFormik<loginFormProps,loginFormValuesInterface>({
     validationSchema : validateSchema,
     handleSubmit: async (values,{props,setFieldError}) => {
        try {
-        let data = await callApi().post('/admin/login',values)
+            let data = await callApi().post('/admin/login',values)
 
-        // let res = await sendToApi({
-        //     url: 'admin/login',
-        //     options:{
-        //         body:JSON.stringify(values)
-        //     }
-        // })
-        // console.log(data.status)
-        if(data.status === 200){
-            // console.log(data.data.token)
-            // if(props.token){
-            //     await props.router.push('/')
-            //     props.clearToken()
-            await StoreLoginToken({
-                options:{
-                    body:JSON.stringify(data.data?.token)
+            if(data.status === 200){
+                // add token into the redux
+                props.setToken(data.data?.token)
+
+                //Creating a cookie and storing the token inside the cookie
+                if(StoreLoginToken(data.data?.token)){
+                    props.router.push('/admin')
+
+                    // clear token form the redux
+                    props.clearToken()
                 }
-            })
-            // props.setToken(data.data?.token)
 
+                toast.success('کاربر با موفقیت وارد شد.')
             }
-
-
-        // }
-       } catch (error) {
-        if(error instanceof ValidationError){
-            Object.entries(error.messeges).forEach(([key,value])=> setFieldError(key , value as string))
+        } catch (error) {
+            if(error instanceof ValidationError){
+                Object.entries(error.messeges).forEach(([key,value])=> setFieldError(key , value as string))
+            }else if(error instanceof Error){
+                toast.error(error.message)
+            }
         }
-       }
     }
 })(InnerLoginForm)
 

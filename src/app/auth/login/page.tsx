@@ -1,6 +1,7 @@
 'use client'
 import LoginForm from "@/components/forms/auth/loginForm";
 import { useAppDispatch, useAppSelector } from "@/hooks";
+
 import { selectTokenVerify, updateTokenVerify } from "@/store/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -10,6 +11,10 @@ const LoginPage = () => {
     const router = useRouter()
     const dispatch = useAppDispatch();
     const token = useAppSelector(selectTokenVerify)
+
+
+
+
 
     const setTokenVerify = (token : string) => {
         dispatch(updateTokenVerify(token))
@@ -22,6 +27,7 @@ const LoginPage = () => {
         if(token === undefined){
             router.push('/auth/login')
         }
+
 
         return () => {
             clearTokenVerify()

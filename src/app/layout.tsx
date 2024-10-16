@@ -1,12 +1,14 @@
 'use client'
 
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import { Vazirmatn } from 'next/font/google'
 import "./globals.css";
 import { Provider } from "react-redux";
 import { store } from "@/store";
-import useAuth from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const vazir = Vazirmatn({
     subsets: ['latin'],
@@ -24,18 +26,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    // const router = useRouter()
-    // const {user , error ,loading}=useAuth()
 
-    // if(loading){
-    //     return <h2>Loading</h2>
-    // }
-
-    // if(error){
-    //     router.push('/auth/login')
-    // }
-
-    // console.log(user)
   return (
     <html lang="en">
       <Provider store={store} >
@@ -43,6 +34,7 @@ export default function RootLayout({
             className={`${vazir.className} antialiased`}
         >
             {children}
+            <ToastContainer />
         </body>
       </Provider>
     </html>

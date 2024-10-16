@@ -1,21 +1,24 @@
+import Cookies from 'universal-cookie';
 
 
-const StoreLoginToken = async (options:{}) => {
-    await fetch('/api/login' , {
-        method:'POST',
-        headers:{
-            "Content-Type" : "application/json"
-        },
+const cookies = new Cookies()
+
+const StoreLoginToken = (token:string,options={}) => {
+    cookies.set('shopy_token', token , {
+        path:'/',
+        maxAge : 60*60*24,
+        sameSite :'lax',
         ...options
     })
+
+    return true
 }
 
 const RemoveLoginToken = async () => {
-    await fetch('/api/logout' , {
-        method:'POST',
-        headers:{
-            "Content-Type" : "application/json"
-        }
+    cookies.remove('shopy_token' , {
+        path:'/',
+        maxAge : 0,
+        sameSite :'lax',
     })
 }
 
