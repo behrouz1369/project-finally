@@ -40,9 +40,7 @@ const SearchCategoryArticleForm = withFormik<SearchCategoryArticleFormProps , ca
        try {
             let res = props.setTitle(values?.title)
 
-
-
-            // props.router.push('/admin/article-category')
+            // props.router.push(`/admin/article-category/search-article?search=${values.title}`)
 
             // toast.success('دسته بندی مقاله با موفقیت وارد شد.')
         } catch (error) {

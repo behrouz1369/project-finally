@@ -42,9 +42,9 @@ export const CreatePost = async ({url,values}:Props) => {
     }
 }
 
-export const Get = async ({url , page , perPage} : Props) => {
+export const Get = async ({url , page } : Props) => {
     try {
-        const res = await fetch(`${URL_BASE}${url}?page=${page}&per_page=${perPage}`,{
+        const res = await fetch(`${URL_BASE}${url}?page=${page}`,{
             method: "get",
                 headers: {
                     authorization : `Bearer ${cookie.get('shopy_token')}`

@@ -35,7 +35,7 @@ const CategoryArticles = () => {
 
       const columns = ['id', 'title'];
 
-      const {data : articles , error , mutate} = useSWR({url:'/admin/article-category', page:page ?? 1 , perPage:perPage ?? 2},Get)
+      const {data : articles , error , mutate} = useSWR({url:'/admin/article-category', page:page ?? 1},Get)
 
       const articlesData = articles?.data?.data?.map((article:CategoryArticle) => article)
 
@@ -45,9 +45,12 @@ const CategoryArticles = () => {
         dispatch(updateTitleCat(title))
       }
 
+
+
       const loadingCategoryArticle = !articles && !error
 
       const articleFilterTitleCat =  articlesData?.filter((article:CategoryArticle) => article.title === titleCat?.trim())
+
 
       useEffect(()=>{
         dispatch(updatePage(page ?? '1'))
@@ -119,19 +122,23 @@ const CategoryArticles = () => {
                                                 loadingCategoryArticle
                                                 ? <span>Loading</span>
                                                 : (
-                                                    articleFilterTitleCat.length > 0
-                                                        ? (
-                                                            articleFilterTitleCat?.map((article:CategoryArticle)=>(
-                                                                <CategoryListItem key={article?.id} article={article} mutateCat={mutate} />
-                                                                ))
-                                                        )
-                                                        : (
-                                                            articlesData?.map((article:CategoryArticle)=>(
-                                                                <CategoryListItem key={article?.id} article={article} mutateCat={mutate} />
-                                                                ))
-                                                        )
+                                                    <>
+                                                        {
+                                                            articleFilterTitleCat.length > 0
+                                                            ? (
+                                                                articleFilterTitleCat?.map((article:CategoryArticle)=>(
+                                                                    <CategoryListItem key={article?.id} article={article} mutateCat={mutate} />
+                                                                    ))
+                                                            )
+                                                            : (
+                                                                articlesData?.map((article:CategoryArticle)=>(
+                                                                    <CategoryListItem key={article?.id} article={article} mutateCat={mutate} />
+                                                                    ))
+                                                            )
+                                                        }
+                                                    </>
 
-                                                    )
+                                                )
                                             }
                                         </tbody>
                                     </table>
@@ -141,13 +148,13 @@ const CategoryArticles = () => {
                 }
             </div>
 
-            <div className="flex justify-start py-5">
+            {/* <div className="flex justify-start py-5">
                 <ReactCustomPaginate
                     page={page}
                     pageCount={articles?.data?.last_page}
                     onPageChangeHandler={pageChangeHandler}
                 />
-            </div>
+            </div> */}
         </div>
     )
 }
