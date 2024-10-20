@@ -38,11 +38,11 @@ const SearchCategoryArticleForm = withFormik<SearchCategoryArticleFormProps , ca
 
 
        try {
+            // set title in state title redux
             let res = props.setTitle(values?.title)
 
-            // props.router.push(`/admin/article-category/search-article?search=${values.title}`)
 
-            // toast.success('دسته بندی مقاله با موفقیت وارد شد.')
+
         } catch (error) {
             if(error instanceof ValidationError){
                 Object.entries(error.messeges).forEach(([key,value])=> setFieldError(key , value as string))
